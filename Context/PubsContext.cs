@@ -18,16 +18,10 @@ public partial class PubsContext : DbContext
 
     public virtual DbSet<Employee> Employees { get; set; }
 
-    //public virtual DbSet<Job> Jobs { get; set; }
-
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        IConfigurationRoot configuration = new ConfigurationBuilder()
-           .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-           .AddJsonFile("appsettings.json")
-           .Build();
-        optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnectionString"));
-    }
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+         => optionsBuilder.UseSqlServer("Server=localhost;Database=pubs;User Id=pub_ad;Password=1213;Trust Server Certificate=true;");
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Employee>(entity =>
@@ -36,7 +30,7 @@ public partial class PubsContext : DbContext
                 .HasName("PK_emp_id")
                 .IsClustered(false);
 
-            entity.ToTable("employee", tb => tb.HasTrigger("employee_insupd"));
+            entity.ToTable("employee");
 
             entity.HasIndex(e => new { e.Lname, e.Fname, e.Minit }, "employee_ind").IsClustered();
 
@@ -74,28 +68,7 @@ public partial class PubsContext : DbContext
                 .HasDefaultValueSql("('9952')")
                 .IsFixedLength()
                 .HasColumnName("pub_id");
-
-            //entity.HasOne(d => d.Job).WithMany(p => p.Employees)
-            //    .HasForeignKey(d => d.JobId)
-            //    .OnDelete(DeleteBehavior.ClientSetNull)
-            //    .HasConstraintName("FK__employee__job_id__48CFD27E");
         });
-
-        //modelBuilder.Entity<Job>(entity =>
-        //{
-        //    entity.HasKey(e => e.JobId).HasName("PK__jobs__6E32B6A53E2D004D");
-
-        //    entity.ToTable("jobs");
-
-        //    entity.Property(e => e.JobId).HasColumnName("job_id");
-        //    entity.Property(e => e.JobDesc)
-        //        .HasMaxLength(50)
-        //        .IsUnicode(false)
-        //        .HasDefaultValueSql("('New Position - title not formalized yet')")
-        //        .HasColumnName("job_desc");
-        //    entity.Property(e => e.MaxLvl).HasColumnName("max_lvl");
-        //    entity.Property(e => e.MinLvl).HasColumnName("min_lvl");
-        //});
 
         OnModelCreatingPartial(modelBuilder);
     }

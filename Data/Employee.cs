@@ -20,6 +20,4 @@ public partial class Employee
     public string PubId { get; set; } = null!;
 
     public DateTime HireDate { get; set; }
-
-    //public virtual Job Job { get; set; } = null!;
 }
