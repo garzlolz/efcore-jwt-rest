@@ -42,7 +42,7 @@ namespace yungching_quiz.Controllers
                 await _pubsContext.SaveChangesAsync();
                 return CreatedAtAction(nameof(Get), new { id = employee.EmpId }, employee);
             }
-            catch(Exception dnex)
+            catch (Exception dnex)
             {
                 return CreatedAtAction(nameof(Get), new { ex = dnex.ToString() });
             }
@@ -61,5 +61,21 @@ namespace yungching_quiz.Controllers
             await _pubsContext.SaveChangesAsync();
             return Ok();
         }
+        [HttpPut("{id}")]
+        public async Task<ActionResult> Update(string id, byte joblv)
+        {
+            if (string.IsNullOrEmpty(id)) 
+                return BadRequest();
+
+            Employee? employee = _pubsContext.Employees.Where(row => row.EmpId == id).FirstOrDefault();
+            if (employee == null) 
+                return NotFound();
+
+            employee.JobLvl = joblv;
+
+            await _pubsContext.SaveChangesAsync();
+            return Ok();
+        }
+
     }
 }
